@@ -51,10 +51,6 @@ IP_Notifier is a versatile project designed for the ESP8266 microcontroller that
 
 Contributions are welcome! Please open an issue or submit a pull request if you have any improvements or bug fixes.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ---
 
 Combining the power of the ESP8266 with the convenience of automated IP reporting, IP_Notifier provides a robust and user-friendly solution for a variety of applications. Whether you're managing a network of IoT devices or need a reliable way to track your ESP8266's IP address, IP_Notifier has you covered.
