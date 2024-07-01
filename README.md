@@ -29,6 +29,7 @@ IP_Notifier is a versatile project designed for the ESP8266 microcontroller that
     - ESP8266HTTPClient
     - ESP8266WebServer
     - EEPROM
+    - WiFiClientSecureBearSSL
 
 4. Modify the following lines in the code to match your network credentials and server URL:
 
