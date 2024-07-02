@@ -30,23 +30,37 @@ void setup() {
   String ssid = getValue(0);
   String password = getValue(32);
 
+  SerialPrintln("Loaded Wi-Fi credentials:");
+  SerialPrint("SSID: ");
+  SerialPrintln(ssid);
+  SerialPrint("Password: ");
+  SerialPrintln(password);
+
   if (ssid.length() > 0 && password.length() > 0) {
     SerialPrint("Connecting to ");
     SerialPrintln(ssid);
     WiFi.begin(ssid.c_str(), password.c_str());
 
-    while (WiFi.status() != WL_CONNECTED) {
+    int attemptCount = 0;
+    while (WiFi.status() != WL_CONNECTED && attemptCount < 20) {
       delay(1000);
       SerialPrint(".");
+      attemptCount++;
     }
     SerialPrintln("");
-    SerialPrintln("WiFi connected");
-    SerialPrint("IP address: ");
-    SerialPrintln(WiFi.localIP().toString());
 
-    // Send IP address on initial connection
-    sendIPAddress();
-    wasConnected = true;
+    if (WiFi.status() == WL_CONNECTED) {
+      SerialPrintln("WiFi connected");
+      SerialPrint("IP address: ");
+      SerialPrintln(WiFi.localIP().toString());
+
+      // Send IP address on initial connection
+      sendIPAddress();
+      wasConnected = true;
+    } else {
+      SerialPrintln("Failed to connect to WiFi.");
+      startAPMode();
+    }
   } else {
     SerialPrintln("No Wi-Fi credentials found, starting AP mode.");
     startAPMode();
@@ -242,4 +256,12 @@ void SerialPrintln(const String& message) {
   Serial.println(message);
   digitalWrite(ledPin, HIGH); // Turn off LED
   delay(100);                 // Wait for 100 milliseconds
+}
+
+void clearEEPROM() {
+  for (int i = 0; i < 512; i++) {
+    EEPROM.write(i, 0);
+  }
+  EEPROM.commit();
+  SerialPrintln("EEPROM cleared.");
 }
