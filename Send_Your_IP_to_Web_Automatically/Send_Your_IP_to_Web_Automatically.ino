@@ -15,6 +15,7 @@ ESP8266WebServer server(80);
 const int buttonPin = 0; // GPIO0 (Flash button)
 const int ledPin = 2; // GPIO2 (Onboard LED, active low)
 bool wasConnected = false;
+bool isAPMode = false;
 
 void setup() {
   pinMode(ledPin, OUTPUT);
@@ -81,6 +82,7 @@ void loop() {
       SerialPrintln(WiFi.localIP().toString());
       sendIPAddress();
       wasConnected = true;
+      isAPMode = false; // Stop blinking when reconnected
     }
   } else {
     if (wasConnected) {
@@ -100,7 +102,15 @@ void loop() {
     }
   }
 
-  delay(10000);  // Adjust as necessary
+  if (isAPMode) {
+    // Blink LED continuously in AP mode
+    digitalWrite(ledPin, LOW);  // Turn on LED
+    delay(50);
+    digitalWrite(ledPin, HIGH); // Turn off LED
+    delay(50);
+  } else {
+    delay(10000);  // Adjust as necessary for normal operation
+  }
 }
 
 void sendIPAddress() {
@@ -239,6 +249,8 @@ void startAPMode() {
   server.on("/", handleRoot);
   server.on("/save", HTTP_POST, handleSaveCredentials);
   server.begin();
+  
+  isAPMode = true; // Set AP mode flag to true to start blinking
 }
 
 // Custom Serial print functions to handle LED blinking
@@ -263,5 +275,4 @@ void clearEEPROM() {
     EEPROM.write(i, 0);
   }
   EEPROM.commit();
-  SerialPrintln("EEPROM cleared.");
 }
