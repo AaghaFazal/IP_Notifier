@@ -114,6 +114,8 @@ void loop() {
 }
 
 void sendIPAddress() {
+  SerialPrintln("Stabilizeing connection...");
+  delay(180000);  // Adjust as per Your Wifi
   SerialPrintln("Attempting to send IP address...");
 
   // Use BearSSL for secure connections
